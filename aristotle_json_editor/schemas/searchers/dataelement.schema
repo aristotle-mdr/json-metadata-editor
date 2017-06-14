@@ -1,0 +1,24 @@
+{
+    "options": {
+        "type": "aristotle_mdr-dataelement"
+    },
+    "title": "Data Element",
+    "type": "object",
+    "default": { "uuid": "" },
+    "oneOf" : [{
+        "title": "search for a data element",
+        "properties" : {
+            "uuid" : {
+                "type" : "string",
+                "format": "search",
+                "title": "Search:"
+            }
+        },
+        "required" : ["uuid"],
+        "additionalProperties": false
+    }, {
+        "format": "local_metadata",
+        "title": "create data element",
+        "$ref": "/dataelement.schema"
+    }]
+}

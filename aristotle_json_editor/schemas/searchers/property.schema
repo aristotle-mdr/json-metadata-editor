@@ -1,0 +1,24 @@
+{
+    "options": {
+        "type": "aristotle_mdr-property"
+    },
+    "title": "Property",
+    "type": "object",
+    "default": { "uuid": "" },
+    "oneOf" : [{
+        "title": "Search for a Property",
+        "properties" : {
+            "uuid" : {
+                "type" : "string",
+                "format": "search",
+                "title": "Search:"
+            }
+        },
+        "required" : ["uuid"],
+        "additionalProperties": false
+    }, {
+        "format": "local_metadata",
+        "title": "Create Property",
+        "$ref": "/property.schema"
+    }]
+}

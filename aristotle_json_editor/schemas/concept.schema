@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "required": ["name"],
+    "properties" : {
+        "name" : {
+            "type" : "string",
+            "minLength": 1
+        },
+        "definition" : {
+            "type" : "string"
+        },
+        "references" : {
+            "type" : "string"
+        }
+    }
+}

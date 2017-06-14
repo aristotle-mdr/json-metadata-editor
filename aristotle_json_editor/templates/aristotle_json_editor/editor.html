@@ -1,0 +1,191 @@
+{% extends 'aristotle_mdr/base.html' %}
+{% load humanize i18n %}
+{% load compile_static %}
+{% load static from staticfiles %}
+{% load aristotle_tags %}
+
+
+{% block extra_head_scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css" />
+
+    <script src="{% static 'json-editor/dist/jsoneditor.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'aristotle_json_editor/editor/autocomplete.css' %}" />
+    <script src="{% static 'aristotle_json_editor/editor/search.js' %}"></script>
+    <script src="{% static 'aristotle_json_editor/editor/local_metadata.js' %}"></script>
+
+    <style>
+      div.selectize-control.form-control {
+        padding:1px;
+      }
+    </style>
+{% endblock %}
+
+{% block title %}
+Quick editor
+{% endblock %}
+
+{% block content %}
+
+    <h1>Quick editor</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{form.as_p}}
+      <div id="valid_indicator" class="alert"></div>
+      <div id='editor_holder'></div>
+      <button type="submit" id="submit_json" class="btn btn-primary">Submit</button>
+    </form>
+    <script type="text/javascript">
+    var editor = null;
+
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var absolutePath = function(href) {
+    var link = document.createElement("a");
+    link.href = href;
+    return (link.protocol+"//"+link.host+link.pathname+link.search+link.hash);
+}
+
+var csrftoken = getCookie('csrftoken');
+
+    JSONEditor.prototype['_loadExternalRefs'] = function(schema, callback) {
+        var self = this;
+        var refs = this._getExternalRefs(schema);
+        
+        var done = 0, waiting = 0, callback_fired = false;
+        
+        $.each(refs,function(_url) {
+          var url = _url;
+
+          fetch_url = url;
+
+          if(JSONEditor.base_uri && url[0] === '/') {
+
+            fetch_url = absolutePath(JSONEditor.base_uri + url)
+          }
+          var this_path = url.substring(0,url.lastIndexOf("/")+1);
+
+
+          if(self.refs[url]) return;
+          if(!self.options.ajax) throw "Must set ajax option to true to load external ref "+url;
+          self.refs[url] = 'loading';
+          waiting++;
+
+          var r = new XMLHttpRequest();
+          r.open("GET", fetch_url, true);
+          r.onreadystatechange = function () {
+            if (r.readyState != 4) return; 
+            // Request succeeded
+            if(r.status === 200) {
+              var response;
+              try {
+                response = JSON.parse(r.responseText);
+              }
+              catch(e) {
+                window.console.log(e);
+                throw "Failed to parse external ref "+url;
+              }
+              if(!response || typeof response !== "object") throw "External ref does not contain a valid schema - "+url;
+              
+              self.refs[url] = response;
+              self._loadExternalRefs(response,function() {
+                done++;
+                if(done >= waiting && !callback_fired) {
+                  callback_fired = true;
+                  callback();
+                }
+              }, this_path);
+            }
+            // Request failed
+            else {
+              window.console.log(r);
+              throw "Failed to fetch ref via ajax- "+url;
+            }
+          };
+          r.send();
+        });
+        
+        if(!waiting) {
+          callback();
+        }
+      }
+    // JSONEditor.prototype['_getExternalRefs'] = function(schema) {
+
+    JSONEditor.autocomplete_path = "{% url 'aristotle-autocomplete:concept' %}";
+    JSONEditor.base_uri = 'https://aristotle-python3-links-legostormtroopr.c9users.io/json_edit/schemas/';
+    
+    JSONEditor.defaults.resolvers.unshift(function(schema) {
+      if(schema.type === "string" && schema.format === "search") {
+        return "search";
+      }
+      if(schema.format === "local_metadata") {
+        return "local_metadata";
+      }
+      // If no valid editor is returned, the next resolver function will be used
+    });
+
+    
+  $.get( "/json_edit/schemas/{{metadata_type}}.schema", function( data ) {
+    // data = JSON.parse(data)
+      editor = new JSONEditor(document.getElementById('editor_holder'),{
+        schema: data,
+        ajax: true,
+        theme: 'bootstrap3',
+        // iconlib: "fontawesome4"
+        // no_additional_properties: true,
+        // disable_edit_json: true,
+        
+      });
+
+      editor.on('change',function() {
+        // Get an array of errors from the validator
+        var errors = editor.validate();
+        
+        var indicator = document.getElementById('valid_indicator');
+        
+        // // Not valid
+        // if(errors.length) {
+        //   indicator.style.color = 'red';
+        //   indicator.textContent = "not valid";
+        // }
+        // // Valid
+        // else {
+        //   indicator.style.color = 'green';
+        //   indicator.textContent = "valid";
+        // }
+      });
+
+
+
+  });
+
+      document.getElementById('submit_json').addEventListener('click',function(e) {
+        // Get the value from the editor
+        // e.preventDefault();
+        data = editor.getValue();
+        $("[name=json_data]").val(JSON.stringify(data))
+        $("[name=extra_data]").val(JSON.stringify(document.item_registry.items))
+      });
+
+
+    </script>
+{% endblock %}

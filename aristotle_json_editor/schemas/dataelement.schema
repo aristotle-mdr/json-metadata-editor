@@ -1,0 +1,13 @@
+{
+	"title": "Data Element",
+	"type": "object",
+	"allOf": [{
+		"$ref": "/concept.schema"
+	}, {
+		"properties": {
+			"valueDomain": { "$ref": "/searchers/valuedomain.schema" },
+			"dataElementConcept": { "$ref": "/searchers/dataelementconcept.schema" }
+		},
+		"additionalProperties": false
+	}]
+}

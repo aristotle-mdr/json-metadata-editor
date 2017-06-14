@@ -1,0 +1,24 @@
+{
+    "options": {
+        "type": "aristotle_mdr-valuedomain"
+    },
+    "title": "Value Domain",
+    "type": "object",
+    "default": { "uuid": "" },
+    "oneOf" : [{
+        "title": "Search for a Value Domain",
+        "properties" : {
+            "uuid" : {
+                "type" : "string",
+                "format": "search",
+                "title": "Search:"
+            }
+        },
+        "required" : ["uuid"],
+        "additionalProperties": false
+    }, {
+        "format": "local_metadata",
+        "title": "Create Value Domain",
+        "$ref": "/valuedomain.schema"
+    }]
+}

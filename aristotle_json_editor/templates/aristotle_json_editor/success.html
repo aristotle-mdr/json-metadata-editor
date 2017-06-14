@@ -1,0 +1,25 @@
+{% extends 'aristotle_mdr/base.html' %}
+{% load humanize i18n %}
+{% load compile_static %}
+{% load static from staticfiles %}
+{% load aristotle_tags %}
+
+
+{% block title %}
+Quick editor
+{% endblock %}
+
+{% block content %}
+
+    <h1>Quick editor</h1>
+    <p>This was submitted!</p>
+    <pre>{{data}}</pre>
+
+    I made these:
+    <ul>
+        {% for i in items %}
+        <li> <code>{{i.uuid}}</code> {% include "aristotle_mdr/helpers/itemLink.html" with item=i %}  </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{
+    "title": "Data Element Concept",
+    "type": "object",
+    "allOf": [{
+        "$ref": "/concept.schema"
+    }, {
+        "properties" : {
+            "inputs": {
+                "type": "array",
+                "format": "tabs",
+                "title": "Input data elements",
+                "items" : { "$ref": "/searchers/dataelement.schema"  }
+            },
+            "derives": {
+                "type": "array",
+                "format": "tabs",
+                "title": "Derived data elements",
+                "items" : { "$ref": "/searchers/dataelement.schema"  }
+            },
+            "derivation_rule" : {
+                "type": "string"
+            }
+        }
+    }]
+}

@@ -1,0 +1,45 @@
+{
+    "title": "Make new distribution",
+    "type": "object",
+    "allOf": [{
+        "$ref": "/concept.schema"
+    }, {
+        "properties": {
+            "download_URL": {
+                "type": "string",
+                "title": "Download URL"
+            },
+            "license": {
+                "type":"string",
+                "title": "License"
+            },
+            "data_elements" : {
+                "type": "array",
+                "format": "tabs",
+                "title": "Columns",
+                "items" : {
+                    "title": "column",
+                    "type": "object",
+                    "headerTemplate": "{{i}} - {{self.logical_path}}",
+                    "properties": {
+                        "logical_path": {
+                            "type": "string",
+                            "title": "Path name"
+                        },
+                        "data_element": { "$ref": "/searchers/dataelement.schema"  },
+                        "specialisation_classes": {
+                            "title": "Unit type specialisations",
+                            "description": "Use this to",
+                            "type": "array",
+                            "items" : {
+                                "title": "Object Class",
+                                "$ref": "/searchers/objectclass.schema"
+                            }
+                        }
+    
+                    }
+                }
+            }
+        }
+    }]
+}

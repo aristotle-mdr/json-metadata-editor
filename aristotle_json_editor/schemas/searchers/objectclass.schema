@@ -1,0 +1,25 @@
+{
+    "options": {
+        "type": "aristotle_mdr-objectclass"
+    },
+    "title": "Object Class",
+    "type": "object",
+    "default": { "uuid": "" },
+    "oneOf" : [{
+        "title": "search for an Object Class",
+        "properties" : {
+            "uuid" : {
+                "type" : "string",
+                "format": "search",
+                "title": "Search:"
+            }
+        },
+        "required" : ["uuid"],
+        "additionalProperties": false
+    }, {
+        "format": "local_metadata",
+        "title": "Create Object Class",
+        "$ref": "/objectclass.schema",
+        "additionalProperties": false
+    }]
+}

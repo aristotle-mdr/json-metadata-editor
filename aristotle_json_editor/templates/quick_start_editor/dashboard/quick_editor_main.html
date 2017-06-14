@@ -1,0 +1,22 @@
+{% extends "aristotle_mdr/user/userHome.html" %}
+{% load i18n %}
+
+{% block sidebar %}
+    {% include "aristotle_mdr/user/userSideBar.html" with activeTab='quick_start_creator' %}
+{% endblock %}
+
+{% block page %}
+<h1><i class="fa fa-rocket fa-fw"></i> {% block title %}{% trans "Quick Start Creator" %}{% endblock %}</h1>
+
+
+Quick starters are designed to help new users quickly populate their registry with information.
+
+<div class="list-group">
+    {% for q, details in quick_starters.items %}
+        <a class="list-group-item" href="{% url 'aristotle_json_editor:load_editor' schema_name=details.name %}">
+            {{details.model.get_verbose_name}}
+            </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

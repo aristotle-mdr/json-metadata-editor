@@ -1,0 +1,49 @@
+{
+    "title": "Data Element",
+    "type": "object",
+    "properties" : {
+        "name" : {
+            "type" : "string"
+        },
+        "definition" : {
+            "type" : "string"
+        },
+        "datatype":  {
+            "type": "object",
+            "default": { "uuid": "" },
+            "oneOf" : [{
+                "title": "reference",
+                "properties" : {
+                    "uuid" : {
+                        "type" : "string",
+                        "title": "Search:"
+                    }
+                },
+                "required" : ["uuid"],
+                "additionalProperties": false
+            }, {
+                "title": "create item",
+                "$ref": "/datatype.schema"
+            }]
+        },
+        "permissiblevalues" : {
+            "title": "Permissible Values",
+            "description": "Use this to add a list of codes used in this column (if applicable)",
+            "type": "array",
+            "format": "table",
+            "items" : {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "title": "Value",
+                        "type" : "string"
+                    },
+                    "meaning": {
+                        "type" : "string"
+                    }
+                }
+            }
+        }
+    },
+    "additionalProperties":false
+}

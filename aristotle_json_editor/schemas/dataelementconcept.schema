@@ -1,0 +1,12 @@
+{
+    "title": "Data Element Concept",
+    "type": "object",
+    "allOf": [{
+        "$ref": "/concept.schema"
+    }, {
+        "properties" : {
+            "objectClass": { "$ref": "/searchers/objectclass.schema"  },
+            "property": { "$ref": "/searchers/property.schema"  }
+        }
+    }]
+}

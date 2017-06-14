@@ -1,0 +1,6 @@
+include LICENSE
+include README.rst
+recursive-include aristotle_json_editor/static *
+recursive-include aristotle_json_editor/templates *
+recursive-exclude aristotle_json_editor/ *.pyc
+exclude MANIFEST.in

@@ -1,0 +1,6 @@
+{% load i18n %}
+
+<li class="{% ifequal activeTab "quick_start_creator" %}active{% endifequal %}">
+    <a href="{% url 'aristotle_json_editor:quick_start_dashboard' %}">
+    <i class="fa fa-rocket fa-fw"></i> {% trans 'Quick Start Creator'%}
+</a></li>

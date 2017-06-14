@@ -1,0 +1,8 @@
+{
+    "title": "Property",
+    "type": "object",
+    "allOf": [{
+        "$ref": "/concept.schema"
+    }],
+    "additionalProperties":false
+}
